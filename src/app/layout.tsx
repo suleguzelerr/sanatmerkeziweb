@@ -19,16 +19,29 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="tr">
+      <body className="bg-white text-gray-900 min-h-screen flex flex-col">
+        <header className="w-full bg-red-600 text-white py-4 shadow-sm">
+          <div className="container mx-auto flex justify-between items-center px-4">
+            <span className="font-bold text-lg md:text-2xl">Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi</span>
+            <nav className="space-x-4 hidden md:block">
+              <a href="/" className="hover:text-gray-800 transition">Anasayfa</a>
+              <a href="/kurslar" className="hover:text-gray-800 transition">Kurslar</a>
+              <a href="/etkinlikler" className="hover:text-gray-800 transition">Etkinlikler</a>
+              <a href="/duyurular" className="hover:text-gray-800 transition">Duyurular</a>
+              <a href="/iletisim" className="hover:text-gray-800 transition">İletişim</a>
+            </nav>
+          </div>
+        </header>
+        <main className="flex-1 flex flex-col bg-gray-50">{children}</main>
+        <footer className="w-full bg-gray-50 text-gray-700 py-4 mt-8 text-center text-sm border-t border-gray-200">
+          © {new Date().getFullYear()} Atakum Belediyesi | Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi
+        </footer>
       </body>
     </html>
-  );
+  )
 }
