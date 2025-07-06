@@ -2,39 +2,82 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-900">
-      <section className="w-full max-w-3xl px-4 py-12 text-center">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4 text-red-700">
-          Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi
-        </h1>
-        <p className="mb-6 text-lg md:text-xl">
-          Atakum Belediyesi bünyesinde faaliyet gösteren, her yaştan bireyin faydalanabileceği çağdaş, katılımcı ve sosyal bir merkez.
-        </p>
-        <div className="mb-6 flex flex-col md:flex-row items-center justify-center gap-4">
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <span className="block font-semibold text-red-700">Hizmet Saatleri</span>
-            <span className="text-gray-700">Her gün 08:30 – 22:00</span>
-          </div>
-          <div className="bg-gray-100 rounded-lg p-4 shadow-sm">
-            <span className="block font-semibold text-gray-800">Lokasyon</span>
-            <span className="text-gray-600">Atakum, Samsun</span>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <span className="block font-semibold text-gray-800">Kapasite</span>
-            <span className="text-gray-600">135 kişilik alan</span>
-          </div>
+    <div className="container mx-auto px-4 py-8">
+      {/* Bilgi Kartları */}
+      <section className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="bg-white rounded-lg p-6 shadow-lg border-l-4 border-red-600">
+          <h3 className="text-xl font-bold text-red-700 mb-2">Hizmet Saatleri</h3>
+          <p className="text-lg text-gray-700">Her gün 08:30 – 22:00</p>
         </div>
-        <div className="flex flex-wrap justify-center gap-4 mt-8">
-          <Link href="/kayit" className="px-6 py-2 bg-red-600 text-white rounded shadow-sm hover:bg-red-700 transition">Kayıt</Link>
-          <Link href="/kurslar" className="px-6 py-2 bg-white text-red-600 border border-red-600 rounded shadow-sm hover:bg-red-50 transition">Kurslar</Link>
-          <Link href="/kutuphane" className="px-6 py-2 bg-gray-100 text-gray-800 rounded shadow-sm hover:bg-gray-200 transition">Kütüphane</Link>
-          <Link href="/etkinlikler" className="px-6 py-2 bg-white text-gray-800 rounded shadow-sm hover:bg-gray-100 transition">Etkinlikler</Link>
-          <Link href="/duyurular" className="px-6 py-2 bg-gray-100 text-red-700 rounded shadow-sm hover:bg-gray-200 transition">Duyurular</Link>
-          <Link href="/hakkimizda" className="px-6 py-2 bg-white text-gray-800 rounded shadow-sm hover:bg-gray-100 transition">Hakkımızda</Link>
-          <Link href="/wifi" className="px-6 py-2 bg-gray-100 text-gray-800 rounded shadow-sm hover:bg-gray-200 transition">WiFi</Link>
-          <Link href="/iletisim" className="px-6 py-2 bg-white text-gray-800 rounded shadow-sm hover:bg-gray-100 transition">İletişim</Link>
+        <div className="bg-white rounded-lg p-6 shadow-lg border-l-4 border-blue-600">
+          <h3 className="text-xl font-bold text-red-700 mb-2">Lokasyon</h3>
+          <p className="text-lg text-gray-700">Atakum, Samsun</p>
+        </div>
+        <div className="bg-white rounded-lg p-6 shadow-lg border-l-4 border-green-600">
+          <h3 className="text-xl font-bold text-green-700 mb-2">Kapasite</h3>
+          <p className="text-lg text-gray-700">135 kişilik alan</p>
         </div>
       </section>
-    </main>
+
+      {/* Hızlı Erişim Linkleri */}
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Hızlı Erişim</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Link href="/kayit" className="bg-red-600 text-white p-6 rounded-lg shadow-lg hover:bg-red-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">📝</div>
+            <div className="font-semibold">Kayıt</div>
+          </Link>
+          <Link href="/kurslar" className="bg-blue-600 text-white p-6 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">🎨</div>
+            <div className="font-semibold">Kurslar</div>
+          </Link>
+          <Link href="/kutuphane" className="bg-green-600 text-white p-6 rounded-lg shadow-lg hover:bg-green-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">📚</div>
+            <div className="font-semibold">Kütüphane</div>
+          </Link>
+          <Link href="/etkinlikler" className="bg-purple-600 text-white p-6 rounded-lg shadow-lg hover:bg-purple-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">🎭</div>
+            <div className="font-semibold">Etkinlikler</div>
+          </Link>
+          <Link href="/duyurular" className="bg-orange-600 text-white p-6 rounded-lg shadow-lg hover:bg-orange-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">📢</div>
+            <div className="font-semibold">Duyurular</div>
+          </Link>
+          <Link href="/hakkimizda" className="bg-teal-600 text-white p-6 rounded-lg shadow-lg hover:bg-teal-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">ℹ️</div>
+            <div className="font-semibold">Hakkımızda</div>
+          </Link>
+          <Link href="/wifi" className="bg-indigo-600 text-white p-6 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">📶</div>
+            <div className="font-semibold">WiFi</div>
+          </Link>
+          <Link href="/iletisim" className="bg-gray-600 text-white p-6 rounded-lg shadow-lg hover:bg-gray-700 transition duration-300 text-center">
+            <div className="text-2xl font-bold mb-2">📞</div>
+            <div className="font-semibold">İletişim</div>
+          </Link>
+        </div>
+      </section>
+
+      {/* Ek Hizmetler */}
+      <section className="bg-white rounded-lg p-8 shadow-lg">
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Ek Hizmetler</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="flex items-center space-x-4">
+            <div className="text-3xl">🧺</div>
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800">Kuru Temizleme</h3>
+              <p className="text-gray-600">Profesyonel kuru temizleme hizmeti</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="text-3xl">💳</div>
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800">AtaKart</h3>
+              <p className="text-gray-600">AtaKart ile kolay ödeme</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

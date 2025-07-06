@@ -3,7 +3,7 @@ import React from "react";
 export default function HakkimizdaPage() {
   return (
     <section className="max-w-3xl mx-auto px-4 py-12">
-      <h1 className="text-2xl md:text-4xl font-bold mb-4 text-blue-700">Hakkımızda</h1>
+      <h1 className="text-2xl md:text-4xl font-bold mb-4 text-red-700">Hakkımızda</h1>
       <p className="mb-6 text-lg">Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi, Atakum Belediyesi ile ilişkili çağdaş ve sosyal bir yapıdır.</p>
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Vizyonumuz</h2>

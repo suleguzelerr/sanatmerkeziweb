@@ -1,16 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,21 +13,37 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+
   return (
     <html lang="tr">
       <body className="bg-white text-gray-900 min-h-screen flex flex-col">
-        <header className="w-full bg-red-600 text-white py-4 shadow-sm">
-          <div className="container mx-auto flex justify-between items-center px-4">
-            <span className="font-bold text-lg md:text-2xl">Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi</span>
-            <nav className="space-x-4 hidden md:block">
-              <a href="/" className="hover:text-gray-800 transition">Anasayfa</a>
-              <a href="/kurslar" className="hover:text-gray-800 transition">Kurslar</a>
-              <a href="/etkinlikler" className="hover:text-gray-800 transition">Etkinlikler</a>
-              <a href="/duyurular" className="hover:text-gray-800 transition">Duyurular</a>
-              <a href="/iletisim" className="hover:text-gray-800 transition">İletişim</a>
+        {/* Sticky navbar */}
+        <div className="w-full bg-white shadow-sm sticky top-0 z-50">
+          <div className="container mx-auto flex justify-between items-center px-4 py-2">
+            {/* Logo/Başlık */}
+            <div className="text-xl font-bold text-red-700">
+              Sanat Merkezi
+            </div>
+            {/* Menü */}
+            <nav className="flex gap-6">
+              <Link href="/" className="text-gray-800 hover:text-red-600 font-medium transition">Anasayfa</Link>
+              <Link href="/kurslar" className="text-gray-800 hover:text-red-600 font-medium transition">Kurslar</Link>
+              <Link href="/etkinlikler" className="text-gray-800 hover:text-red-600 font-medium transition">Etkinlikler</Link>
+              <Link href="/duyurular" className="text-gray-800 hover:text-red-600 font-medium transition">Duyurular</Link>
+              <Link href="/iletisim" className="text-gray-800 hover:text-red-600 font-medium transition">İletişim</Link>
             </nav>
           </div>
-        </header>
+        </div>
+        {/* Hero/banner sadece ana sayfa dışında gösterilecek */}
+        {pathname !== "/" && (
+          <div className="w-full bg-gradient-to-br from-red-600 via-white to-gray-100 py-12 mb-6">
+            <div className="container mx-auto flex flex-col items-center justify-center px-4">
+              <h1 className="text-3xl md:text-5xl font-bold text-center text-red-700 drop-shadow mb-4">Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi</h1>
+              <p className="text-lg md:text-xl text-gray-800 text-center max-w-2xl mb-2">Atakum Belediyesi bünyesinde faaliyet gösteren, her yaştan bireyin faydalanabileceği çağdaş, katılımcı ve sosyal bir merkez.</p>
+            </div>
+          </div>
+        )}
         <main className="flex-1 flex flex-col bg-gray-50">{children}</main>
         <footer className="w-full bg-gray-50 text-gray-700 py-4 mt-8 text-center text-sm border-t border-gray-200">
           © {new Date().getFullYear()} Atakum Belediyesi | Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi
