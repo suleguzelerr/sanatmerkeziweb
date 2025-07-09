@@ -27,6 +27,7 @@ export default function RootLayout({
             {/* Menü */}
             <nav className="flex gap-6">
               <Link href="/" className="text-gray-800 hover:text-red-600 font-medium transition">Anasayfa</Link>
+              <Link href="/hakkimizda" className="text-gray-800 hover:text-red-600 font-medium transition">Hakkımızda</Link>
               <Link href="/kurslar" className="text-gray-800 hover:text-red-600 font-medium transition">Kurslar</Link>
               <Link href="/etkinlikler" className="text-gray-800 hover:text-red-600 font-medium transition">Etkinlikler</Link>
               <Link href="/duyurular" className="text-gray-800 hover:text-red-600 font-medium transition">Duyurular</Link>
