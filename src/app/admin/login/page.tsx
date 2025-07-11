@@ -1,12 +1,21 @@
 "use client";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session && session.user && (session.user as any).role === "admin") {
+      router.replace("/admin");
+    }
+  }, [session, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,10 +24,11 @@ export default function AdminLoginPage() {
     const res = await signIn("credentials", {
       email,
       password,
-      redirect: true,
-      callbackUrl: "/admin",
+      redirect: false,
     });
-    if (res?.error) setError("Giriş başarısız. Bilgileri kontrol edin.");
+    if (res?.error) {
+      setError("Giriş başarısız. Bilgileri kontrol edin.");
+    }
     setLoading(false);
   };
 

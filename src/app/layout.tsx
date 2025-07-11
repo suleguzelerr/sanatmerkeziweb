@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Link from "next/link";
+import Navbar from "./Navbar";
 import { FaInstagram, FaFacebook, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import Image from "next/image";
+import SessionWrapper from "./SessionWrapper";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,72 +15,46 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
-
   return (
     <html lang="tr">
       <body className="bg-white text-gray-900 min-h-screen flex flex-col">
-        {/* Sticky navbar */}
-        <div className="w-full bg-white shadow-sm sticky top-0 z-50">
-          <div className="container mx-auto flex justify-between items-center px-4 py-2">
-            {/* Logo/Başlık */}
-            <div>
-              <Image src="/logo.png/logo.png" alt="Atakum Belediyesi Logo" height={90} width={180} className="h-16 w-auto" />
-            </div>
-            {/* Menü */}
-            <nav className="flex gap-6">
-              <Link href="/" className="text-gray-800 hover:text-red-600 font-medium transition">Anasayfa</Link>
-              <Link href="/hakkimizda" className="text-gray-800 hover:text-red-600 font-medium transition">Hakkımızda</Link>
-              <Link href="/kurslar" className="text-gray-800 hover:text-red-600 font-medium transition">Kurslar</Link>
-              <Link href="/etkinlikler" className="text-gray-800 hover:text-red-600 font-medium transition">Etkinlikler</Link>
-              <Link href="/duyurular" className="text-gray-800 hover:text-red-600 font-medium transition">Duyurular</Link>
-              <Link href="/iletisim" className="text-gray-800 hover:text-red-600 font-medium transition">İletişim</Link>
-            </nav>
-          </div>
-        </div>
-        {/* Hero/banner sadece ana sayfa dışında gösterilecek */}
-        {pathname !== "/" && (
-          <div className="w-full bg-gradient-to-br from-red-600 via-white to-gray-100 py-12 mb-6">
-            <div className="container mx-auto flex flex-col items-center justify-center px-4">
-              <h1 className="text-3xl md:text-5xl font-bold text-center text-red-700 drop-shadow mb-4">Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi</h1>
-              <p className="text-lg md:text-xl text-gray-800 text-center max-w-2xl mb-2">Atakum Belediyesi bünyesinde faaliyet gösteren, her yaştan bireyin faydalanabileceği çağdaş, katılımcı ve sosyal bir merkez.</p>
-            </div>
-          </div>
-        )}
-        <main className="flex-1 flex flex-col bg-gray-50">{children}</main>
-        <footer className="w-full bg-gray-50 text-gray-700 pt-10 pb-6 mt-8 border-t border-gray-200">
-          <div className="max-w-6xl mx-auto px-4">
-            {/* Slogan ve Logo */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-                <div className="flex items-center gap-6 flex-1 min-w-0">
-                  <Image src="/logo.png/logo.png" alt="Atakum Belediyesi Logo" height={112} width={224} className="h-28 w-auto rounded-lg shadow bg-white p-2" />
-                  <div className="flex flex-col items-start justify-center">
-                    <div className="text-2xl md:text-3xl font-extrabold mb-1 pl-1 bg-gradient-to-r from-red-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">444 40 55</div>
-                    <div className="text-4xl md:text-5xl font-extrabold whitespace-nowrap bg-gradient-to-r from-red-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
-                      #CanımAtakum
+        <SessionWrapper>
+          <Navbar />
+          <main className="flex-1 flex flex-col bg-gray-50">{children}</main>
+          <footer className="w-full bg-gray-50 text-gray-700 pt-10 pb-6 mt-8 border-t border-gray-200">
+            <div className="max-w-6xl mx-auto px-4">
+              {/* Slogan ve Logo */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+                  <div className="flex items-center gap-6 flex-1 min-w-0">
+                    <Image src="/logo.png/logo.png" alt="Atakum Belediyesi Logo" height={112} width={224} className="h-28 w-auto rounded-lg shadow bg-white p-2" />
+                    <div className="flex flex-col items-start justify-center">
+                      <div className="text-2xl md:text-3xl font-extrabold mb-1 pl-1 bg-gradient-to-r from-red-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">444 40 55</div>
+                      <div className="text-4xl md:text-5xl font-extrabold whitespace-nowrap bg-gradient-to-r from-red-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
+                        #CanımAtakum
+                      </div>
                     </div>
                   </div>
+                {/* Sağ kısım: önce sosyal medya, altında iletişim */}
+                <div className="flex-1 flex flex-col items-center md:items-end gap-2 text-sm">
+                  <div className="flex items-center gap-4 mb-2">
+                    <a href="https://instagram.com/hasanaliyucelgenclikmerkezi" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                      <FaInstagram className="text-pink-500 text-2xl hover:scale-110 transition" />
+                    </a>
+                    <a href="https://facebook.com/hasanaliyucelgenclikmerkezi" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                      <FaFacebook className="text-blue-700 text-2xl hover:scale-110 transition" />
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-2"><FaPhone className="text-red-600" /> <span className="font-semibold">(501) 737 52 88</span></div>
+                  <div className="flex items-center gap-2"><FaMapMarkerAlt className="text-green-600" /> Cumhuriyet, 37. Sk. No:5, 55200 Atakum/Samsun</div>
+                  <div className="flex items-center gap-2"><FaEnvelope className="text-blue-600" /> bilgi@atakum.bel.tr</div>
                 </div>
-              {/* Sağ kısım: önce sosyal medya, altında iletişim */}
-              <div className="flex-1 flex flex-col items-center md:items-end gap-2 text-sm">
-                <div className="flex items-center gap-4 mb-2">
-                  <a href="https://instagram.com/hasanaliyucelgenclikmerkezi" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                    <FaInstagram className="text-pink-500 text-2xl hover:scale-110 transition" />
-                  </a>
-                  <a href="https://facebook.com/hasanaliyucelgenclikmerkezi" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                    <FaFacebook className="text-blue-700 text-2xl hover:scale-110 transition" />
-                  </a>
-                </div>
-                <div className="flex items-center gap-2"><FaPhone className="text-red-600" /> <span className="font-semibold">(501) 737 52 88</span></div>
-                <div className="flex items-center gap-2"><FaMapMarkerAlt className="text-green-600" /> Cumhuriyet, 37. Sk. No:5, 55200 Atakum/Samsun</div>
-                <div className="flex items-center gap-2"><FaEnvelope className="text-blue-600" /> bilgi@atakum.bel.tr</div>
+              </div>
+              <div className="text-center text-xs text-gray-500 mt-6">
+                © {new Date().getFullYear()} Atakum Belediyesi | Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi
               </div>
             </div>
-            <div className="text-center text-xs text-gray-500 mt-6">
-              © {new Date().getFullYear()} Atakum Belediyesi | Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi
-            </div>
-          </div>
-        </footer>
+          </footer>
+        </SessionWrapper>
       </body>
     </html>
   )

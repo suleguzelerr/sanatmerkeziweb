@@ -11,10 +11,10 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (
-          credentials?.email === "admin@example.com" &&
-          credentials?.password === "admin123"
+          credentials?.email === "atakumbel55@gmail.com" &&
+          credentials?.password === "atakum55"
         ) {
-          return { id: "1", name: "Admin", email: "admin@example.com", role: "admin" };
+          return { id: "1", name: "Admin", email: "atakumbel55@gmail.com", role: "admin" };
         }
         return null;
       },
