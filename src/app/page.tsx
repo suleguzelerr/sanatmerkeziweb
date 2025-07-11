@@ -1,42 +1,9 @@
 'use client';
 
 import Link from "next/link";
-import React, { useState } from "react";
-
-const kursGruplari = [
-  {
-    baslik: "Yabancı Dil",
-    secenekler: [
-      { value: "fransizca-a1", label: "Fransızca A1" },
-      { value: "fransizca-a2", label: "Fransızca A2" },
-      { value: "almanca-a1", label: "Almanca A1" },
-      { value: "almanca-a2", label: "Almanca A2" },
-    ],
-  },
-  {
-    baslik: "Sosyal Kültürel",
-    secenekler: [
-      { value: "hasta-yasli-bakimi", label: "Hasta ve Yaşlı Bakımı" },
-      { value: "isaret-dili", label: "İşaret Dili" },
-      { value: "cocuk-gelisimi", label: "Çocuk Gelişimi" },
-    ],
-  },
-  {
-    baslik: "Sanat Tasarımı",
-    secenekler: [
-      { value: "cinicilik", label: "Çinicilik" },
-    ],
-  },
-];
-
-const sozlesmeMetni = `İş bu formu doldurmakla söz konusu kursa başvurmuş olmakla birlikte eğitimini alacağım kurs sayısı, kursun tarafıma verilip verilmeyeceği konularında Atakum Belediyesi'nin veya yetkili kıldığı kişilerin herhangi bir gerekçe belirtmeksizin bu hizmeti durdurma veya hiç vermeme hakkı olduğunu; ayrıca kontenjanın sınırlı olması nedeniyle hizmet alamamam gibi durumları peşinen kabul ederim. Bu tür bir durumda hiçbir hak ve alacak talep etmeyeceğimi gayri kabili rücu olmak koşuluyla kabul ederim. Yukarıda beyan ettiğim bilgilerin doğruluğunu onaylıyor ve yanlış, yalan bilgilerimden dolayı doğacak sorumluluğun bana ait olacağını kabul ediyorum. İş bu başvurum sırasında şahsımın başvurduğum merci ve yetkilileri tarafından hiçbir şekilde bağış, yardım, hibe vb. adlarla dahi kurs ücreti talep edilmeyeceği taahhüt edilmiştir. Kursiyerin yararlanacağı eğitim programına göre temin etmesi gereken, kursiyerin kendisi tarafından kullanılacak; defter, kitap, kalem, boya, tuval, müzik enstrümanları vb. kursiyerin temin etmesi gereken tüm ders araç ve gereçlerinin temininin kursiyerin sorumluluğunda olduğu şahsıma bildirilmiş olup, gerekenler tarafından temin edilecektir. Ayrıca kurs programını dersi başladıktan sonra yasal dayanağı olmaksızın herhangi bir gerekçeyle bırakmam, kursa devam etmemem veya yönetmeliklerde belirtilen yasal devamsızlık hakkımı aşmam nedeniyle kaydımın iptal edilmesi durumunda belediyenin kurs merkezine açacağı diğer kurs programlarına kayıt önceliğimi kaybedeceğimi ve bu vesileyle diğer tüm hak sahipleri söz konusu kurslardan yararlanıncaya kadar herhangi bir kurs talebinde bulunmayacağımı kabul ve taahhüt ederim.`;
+import React from "react";
 
 export default function Home() {
-  const [formAcik, setFormAcik] = useState(false);
-  const [seciliKurs, setSeciliKurs] = useState("");
-  const [evrakTipi, setEvrakTipi] = useState("online");
-  const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
-
   return (
     <div className="container max-w-5xl mx-auto px-4 py-8">
       {/* Bilgi Kartları */}

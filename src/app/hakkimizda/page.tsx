@@ -10,7 +10,7 @@ export default function HakkimizdaPage() {
           Hasan Ali Yücel Gençlik Bilim ve Sanat Merkezi, Atakum Belediyesi bünyesinde faaliyet gösteren, her yaştan bireyin <span className="font-semibold text-orange-600">ücretsiz</span> olarak faydalanabileceği çağdaş ve çok yönlü bir yaşam, eğitim ve kültür merkezidir.
         </p>
         <p className="indent-8">
-          Merkezimiz, sabah <span className="font-semibold text-red-600">08:30</span>'dan akşam <span className="font-semibold text-red-600">22:00</span>'ye kadar hizmet vererek; öğrencilere, sanatseverlere, araştırmacılara ve her yaştan ziyaretçiye bilim, sanat, eğitim ve sosyal imkanları bir arada sunar.
+          Merkezimiz, sabah <span className="font-semibold text-red-600">08:30</span>&apos;dan akşam <span className="font-semibold text-red-600">22:00</span>&apos;ye kadar hizmet vererek; öğrencilere, sanatseverlere, araştırmacılara ve her yaştan ziyaretçiye bilim, sanat, eğitim ve sosyal imkanları bir arada sunar.
         </p>
         <p className="indent-8">
           <span className="font-semibold text-orange-600">135 kişilik</span> konforlu oturma kapasitesine sahip kütüphanemiz, zengin arşivi ve sessiz çalışma ortamıyla hem ders çalışanlar hem de kitap tutkunları için ideal bir alandır. Ayrıca ödünç kitap hizmeti, ücretsiz fotokopi ve sınavlara hazırlanan gençler için test kitapları desteği sağlanmaktadır.

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import { FaInstagram, FaFacebook, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,7 +24,7 @@ export default function RootLayout({
           <div className="container mx-auto flex justify-between items-center px-4 py-2">
             {/* Logo/Başlık */}
             <div>
-              <img src="/logo.png/logo.png" alt="Atakum Belediyesi Logo" style={{ height: 90 }} className="h-16 w-auto" />
+              <Image src="/logo.png/logo.png" alt="Atakum Belediyesi Logo" height={90} width={180} className="h-16 w-auto" />
             </div>
             {/* Menü */}
             <nav className="flex gap-6">
@@ -51,7 +52,7 @@ export default function RootLayout({
             {/* Slogan ve Logo */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
                 <div className="flex items-center gap-6 flex-1 min-w-0">
-                  <img src="/logo.png/logo.png" alt="Atakum Belediyesi Logo" className="h-28 w-auto rounded-lg shadow bg-white p-2" />
+                  <Image src="/logo.png/logo.png" alt="Atakum Belediyesi Logo" height={112} width={224} className="h-28 w-auto rounded-lg shadow bg-white p-2" />
                   <div className="flex flex-col items-start justify-center">
                     <div className="text-2xl md:text-3xl font-extrabold mb-1 pl-1 bg-gradient-to-r from-red-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">444 40 55</div>
                     <div className="text-4xl md:text-5xl font-extrabold whitespace-nowrap bg-gradient-to-r from-red-600 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
