@@ -2,6 +2,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import type { Session } from "next-auth";
+type UserWithRole = Session["user"] & { role?: string };
 
 export default function AdminAyarlarClient() {
   const { data: session, status } = useSession();
@@ -9,12 +11,12 @@ export default function AdminAyarlarClient() {
 
   useEffect(() => {
     if (status === "loading") return;
-    if (!session || (session.user as any)?.role !== "admin") {
+    if (!session || (session.user as UserWithRole)?.role !== "admin") {
       router.replace("/admin/login");
     }
   }, [session, status, router]);
 
-  if (status === "loading" || !session || (session.user as any)?.role !== "admin") {
+  if (status === "loading" || !session || (session.user as UserWithRole)?.role !== "admin") {
     return <div>Yükleniyor...</div>;
   }
 

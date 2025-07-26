@@ -2,6 +2,8 @@
 import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import type { Session } from "next-auth";
+type UserWithRole = Session["user"] & { role?: string };
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -12,7 +14,7 @@ export default function AdminLoginPage() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    if (session && session.user && (session.user as any).role === "admin") {
+    if (session && session.user && (session.user as UserWithRole).role === "admin") {
       router.replace("/admin");
     }
   }, [session, router]);
