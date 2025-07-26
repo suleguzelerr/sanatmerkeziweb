@@ -97,8 +97,9 @@ export interface Mesaj {
   telefon?: string;
   konu?: string;
   mesaj: string;
-  durum: 'okunmadi' | 'okundu' | 'yanitlandi' | 'spam';
-  yanit?: string;
+  okundu: boolean;
+  yanitlandi: boolean;
+  yanit_metni?: string;
   yanit_tarihi?: string;
   created_at: string;
 }
