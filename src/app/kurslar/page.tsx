@@ -1,43 +1,62 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createClient } from '@supabase/supabase-js';
+import type { Kurs } from '@/types/database';
 
-const kursGruplari = [
-  {
-    baslik: "Yabancı Dil",
-    renk: "bg-blue-100 text-blue-800 border-blue-300",
-    secenekler: [
-      { value: "fransizca-a1", label: "Fransızca A1" },
-      { value: "fransizca-a2", label: "Fransızca A2" },
-      { value: "almanca-a1", label: "Almanca A1" },
-      { value: "almanca-a2", label: "Almanca A2" },
-    ],
-  },
-  {
-    baslik: "Sosyal Kültürel",
-    renk: "bg-green-100 text-green-800 border-green-300",
-    secenekler: [
-      { value: "hasta-yasli-bakimi", label: "Hasta ve Yaşlı Bakımı" },
-      { value: "isaret-dili", label: "İşaret Dili" },
-      { value: "cocuk-gelisimi", label: "Çocuk Gelişimi" },
-    ],
-  },
-  {
-    baslik: "Sanat Tasarımı",
-    renk: "bg-yellow-100 text-yellow-800 border-yellow-300",
-    secenekler: [
-      { value: "cinicilik", label: "Çinicilik" },
-    ],
-  },
-];
+const supabaseUrl = "https://lnrflmfmgccuxgtivumi.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxucmZsbWZtZ2NjdXhndGl2dW1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjk5NzIsImV4cCI6MjA2NzgwNTk3Mn0.G3LWMFYAAv6lFWI9TEsyDGVYyJgnr2zZHHEnk-NMP0Q";
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const sozlesmeMetni = `İş bu formu doldurmakla söz konusu kursa başvurmuş olmakla birlikte eğitimini alacağım kurs sayısı, kursun tarafıma verilip verilmeyeceği konularında Atakum Belediyesi'nin veya yetkili kıldığı kişilerin herhangi bir gerekçe belirtmeksizin bu hizmeti durdurma veya hiç vermeme hakkı olduğunu; ayrıca kontenjanın sınırlı olması nedeniyle hizmet alamamam gibi durumları peşinen kabul ederim. Bu tür bir durumda hiçbir hak ve alacak talep etmeyeceğimi gayri kabili rücu olmak koşuluyla kabul ederim. Yukarıda beyan ettiğim bilgilerin doğruluğunu onaylıyor ve yanlış, yalan bilgilerimden dolayı doğacak sorumluluğun bana ait olacağını kabul ediyorum. İş bu başvurum sırasında şahsımın başvurduğum merci ve yetkilileri tarafından hiçbir şekilde bağış, yardım, hibe vb. adlarla dahi kurs ücreti talep edilmeyeceği taahhüt edilmiştir. Kursiyerin yararlanacağı eğitim programına göre temin etmesi gereken, kursiyerin kendisi tarafından kullanılacak; defter, kitap, kalem, boya, tuval, müzik enstrümanları vb. kursiyerin temin etmesi gereken tüm ders araç ve gereçlerinin temininin kursiyerin sorumluluğunda olduğu şahsıma bildirilmiş olup, gerekenler tarafından temin edilecektir. Ayrıca kurs programını dersi başladıktan sonra yasal dayanağı olmaksızın herhangi bir gerekçeyle bırakmam, kursa devam etmemem veya yönetmeliklerde belirtilen yasal devamsızlık hakkımı aşmam nedeniyle kaydımın iptal edilmesi durumunda belediyenin kurs merkezine açacağı diğer kurs programlarına kayıt önceliğimi kaybedeceğimi ve bu vesileyle diğer tüm hak sahipleri söz konusu kurslardan yararlanıncaya kadar herhangi bir kurs talebinde bulunmayacağımı kabul ve taahhüt ederim.`;
 
 export default function KurslarPage() {
+  const [kurslar, setKurslar] = useState<Kurs[]>([]);
+  const [loading, setLoading] = useState(true);
   const [seciliKurs, setSeciliKurs] = useState<string>("");
   const [evrakTipi, setEvrakTipi] = useState("online");
   const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
   const [formAcik, setFormAcik] = useState(false);
+
+  useEffect(() => {
+    fetchKurslar();
+  }, []);
+
+  const fetchKurslar = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('kurslar')
+        .select('*')
+        .eq('durum', 'aktif')
+        .order('kategori', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching courses:', error);
+        return;
+      }
+
+      setKurslar(data || []);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Kursları kategorilere göre grupla
+  const kursGruplari = kurslar.reduce((groups: any, kurs) => {
+    const kategori = kurs.kategori;
+    if (!groups[kategori]) {
+      groups[kategori] = [];
+    }
+    groups[kategori].push({
+      value: kurs.slug,
+      label: kurs.baslik,
+      kurs: kurs
+    });
+    return groups;
+  }, {});
 
   return (
     <section className="max-w-4xl mx-auto px-4 py-12">
@@ -101,10 +120,10 @@ export default function KurslarPage() {
               <div>
                 <label className="block text-sm font-medium mb-1">Kurs Seçimi*</label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {kursGruplari.map((grup) => (
-                    <div key={grup.baslik}>
-                      <div className={`font-semibold text-xs mb-1 px-2 py-1 rounded bg-red-100 text-red-800 border-red-500`}>{grup.baslik}</div>
-                      {grup.secenekler.map((sec) => (
+                  {Object.entries(kursGruplari).map(([kategori, secenekler]: [string, any]) => (
+                    <div key={kategori}>
+                      <div className={`font-semibold text-xs mb-1 px-2 py-1 rounded bg-red-100 text-red-800 border-red-500`}>{kategori}</div>
+                      {secenekler.map((sec: any) => (
                         <label key={sec.value} className="flex items-center gap-2 text-sm mb-1">
                           <input
                             type="radio"
@@ -164,23 +183,33 @@ export default function KurslarPage() {
           </div>
         )}
       </div>
-      <div className="space-y-10 mb-12">
-        {kursGruplari.map((grup) => (
-          <div key={grup.baslik}>
-            <h2 className="text-xl font-bold mb-4 px-4 py-2 rounded shadow inline-block border-l-8 bg-red-100 text-red-800 border-red-500">{grup.baslik}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {grup.secenekler.map((kurs) => (
-                <div key={kurs.value} className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center border-2 border-gray-100 hover:border-red-400 transition">
-                  <div className="flex flex-col items-center">
-                    <span className="text-3xl mb-2">🎓</span>
-                    <h3 className="text-lg font-bold text-gray-800 mb-1 tracking-wide uppercase">{kurs.label}</h3>
+      {loading ? (
+        <div className="text-center py-8">Kurslar yükleniyor...</div>
+      ) : (
+        <div className="space-y-10 mb-12">
+          {Object.entries(kursGruplari).map(([kategori, secenekler]: [string, any]) => (
+            <div key={kategori}>
+              <h2 className="text-xl font-bold mb-4 px-4 py-2 rounded shadow inline-block border-l-8 bg-red-100 text-red-800 border-red-500">{kategori}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {secenekler.map((kurs: any) => (
+                  <div key={kurs.value} className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center border-2 border-gray-100 hover:border-red-400 transition">
+                    <div className="flex flex-col items-center">
+                      <span className="text-3xl mb-2">🎓</span>
+                      <h3 className="text-lg font-bold text-gray-800 mb-1 tracking-wide uppercase">{kurs.label}</h3>
+                      {kurs.kurs.egitmen && (
+                        <p className="text-sm text-gray-600">Eğitmen: {kurs.kurs.egitmen}</p>
+                      )}
+                      {kurs.kurs.kontenjan && (
+                        <p className="text-sm text-gray-600">Kontenjan: {kurs.kurs.kontenjan}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 } 

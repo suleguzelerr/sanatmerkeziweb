@@ -20,6 +20,20 @@ export default function AdminKurslarClient() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingKurs, setEditingKurs] = useState<Kurs | null>(null);
+  const [formData, setFormData] = useState({
+    baslik: '',
+    slug: '',
+    kategori: 'Yabancı Dil',
+    aciklama: '',
+    egitmen: '',
+    kontenjan: 20,
+    baslangic_tarihi: '',
+    bitis_tarihi: '',
+    gunler: '',
+    saatler: '',
+    ucret: 0,
+    durum: 'aktif'
+  });
 
   useEffect(() => {
     if (status === "loading") return;
@@ -90,6 +104,82 @@ export default function AdminKurslarClient() {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      if (editingKurs) {
+        // Güncelleme
+        const { error } = await supabase
+          .from('kurslar')
+          .update(formData)
+          .eq('id', editingKurs.id);
+
+        if (error) {
+          console.error('Error updating course:', error);
+          return;
+        }
+      } else {
+        // Yeni ekleme
+        const { error } = await supabase
+          .from('kurslar')
+          .insert(formData);
+
+        if (error) {
+          console.error('Error adding course:', error);
+          return;
+        }
+      }
+
+      setShowForm(false);
+      setEditingKurs(null);
+      setFormData({
+        baslik: '',
+        slug: '',
+        kategori: 'Yabancı Dil',
+        aciklama: '',
+        egitmen: '',
+        kontenjan: 20,
+        baslangic_tarihi: '',
+        bitis_tarihi: '',
+        gunler: '',
+        saatler: '',
+        ucret: 0,
+        durum: 'aktif'
+      });
+      fetchKurslar();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const openEditForm = (kurs: Kurs) => {
+    setEditingKurs(kurs);
+    setFormData({
+      baslik: kurs.baslik,
+      slug: kurs.slug,
+      kategori: kurs.kategori,
+      aciklama: kurs.aciklama || '',
+      egitmen: kurs.egitmen || '',
+      kontenjan: kurs.kontenjan,
+      baslangic_tarihi: kurs.baslangic_tarihi || '',
+      bitis_tarihi: kurs.bitis_tarihi || '',
+      gunler: kurs.gunler || '',
+      saatler: kurs.saatler || '',
+      ucret: kurs.ucret,
+      durum: kurs.durum
+    });
+    setShowForm(true);
   };
 
   if (status === "loading" || !session || (session.user as UserWithRole)?.role !== "admin") {
@@ -173,7 +263,7 @@ export default function AdminKurslarClient() {
                         {kurs.durum === 'aktif' ? 'Pasif Yap' : 'Aktif Yap'}
                       </button>
                       <button 
-                        onClick={() => setEditingKurs(kurs)}
+                        onClick={() => openEditForm(kurs)}
                         className="text-blue-600 hover:text-blue-900"
                       >
                         Düzenle
@@ -202,41 +292,146 @@ export default function AdminKurslarClient() {
       {/* Kurs Ekleme/Düzenleme Formu */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+          <div className="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold mb-4">
               {editingKurs ? 'Kurs Düzenle' : 'Yeni Kurs Ekle'}
             </h3>
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Kurs Adı</label>
-                <input 
-                  type="text" 
-                  className="w-full border rounded px-3 py-2"
-                  defaultValue={editingKurs?.baslik || ''}
-                />
+            <form onSubmit={handleFormSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Kurs Adı *</label>
+                  <input 
+                    type="text" 
+                    name="baslik"
+                    value={formData.baslik}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Slug *</label>
+                  <input 
+                    type="text" 
+                    name="slug"
+                    value={formData.slug}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="kurs-adi-slug"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Kategori *</label>
+                  <select 
+                    name="kategori"
+                    value={formData.kategori}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    required
+                  >
+                    <option value="Yabancı Dil">Yabancı Dil</option>
+                    <option value="Sosyal Kültürel">Sosyal Kültürel</option>
+                    <option value="Sanat Tasarımı">Sanat Tasarımı</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Eğitmen</label>
+                  <input 
+                    type="text" 
+                    name="egitmen"
+                    value={formData.egitmen}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Kontenjan</label>
+                  <input 
+                    type="number" 
+                    name="kontenjan"
+                    value={formData.kontenjan}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    min="1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Ücret</label>
+                  <input 
+                    type="number" 
+                    name="ucret"
+                    value={formData.ucret}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Başlangıç Tarihi</label>
+                  <input 
+                    type="date" 
+                    name="baslangic_tarihi"
+                    value={formData.baslangic_tarihi}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Bitiş Tarihi</label>
+                  <input 
+                    type="date" 
+                    name="bitis_tarihi"
+                    value={formData.bitis_tarihi}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Günler</label>
+                  <input 
+                    type="text" 
+                    name="gunler"
+                    value={formData.gunler}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="Pazartesi, Çarşamba"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Saatler</label>
+                  <input 
+                    type="text" 
+                    name="saatler"
+                    value={formData.saatler}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="14:00-16:00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Durum</label>
+                  <select 
+                    name="durum"
+                    value={formData.durum}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value="aktif">Aktif</option>
+                    <option value="pasif">Pasif</option>
+                    <option value="tam">Tam</option>
+                  </select>
+                </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Kategori</label>
-                <select className="w-full border rounded px-3 py-2">
-                  <option value="Yabancı Dil">Yabancı Dil</option>
-                  <option value="Sosyal Kültürel">Sosyal Kültürel</option>
-                  <option value="Sanat Tasarımı">Sanat Tasarımı</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Eğitmen</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm font-medium mb-1">Açıklama</label>
+                <textarea 
+                  name="aciklama"
+                  value={formData.aciklama}
+                  onChange={handleInputChange}
+                  rows={4}
                   className="w-full border rounded px-3 py-2"
-                  defaultValue={editingKurs?.egitmen || ''}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Kontenjan</label>
-                <input 
-                  type="number" 
-                  className="w-full border rounded px-3 py-2"
-                  defaultValue={editingKurs?.kontenjan || 20}
                 />
               </div>
               <div className="flex gap-2 pt-4">
@@ -245,6 +440,20 @@ export default function AdminKurslarClient() {
                   onClick={() => {
                     setShowForm(false);
                     setEditingKurs(null);
+                    setFormData({
+                      baslik: '',
+                      slug: '',
+                      kategori: 'Yabancı Dil',
+                      aciklama: '',
+                      egitmen: '',
+                      kontenjan: 20,
+                      baslangic_tarihi: '',
+                      bitis_tarihi: '',
+                      gunler: '',
+                      saatler: '',
+                      ucret: 0,
+                      durum: 'aktif'
+                    });
                   }}
                   className="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                 >

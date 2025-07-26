@@ -20,6 +20,14 @@ export default function AdminDuyurularClient() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingDuyuru, setEditingDuyuru] = useState<Duyuru | null>(null);
+  const [formData, setFormData] = useState({
+    baslik: '',
+    icerik: '',
+    yayin_tarihi: '',
+    son_tarih: '',
+    onem_derecesi: 'normal',
+    durum: 'aktif'
+  });
 
   useEffect(() => {
     if (status === "loading") return;
@@ -90,6 +98,70 @@ export default function AdminDuyurularClient() {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      if (editingDuyuru) {
+        // Güncelleme
+        const { error } = await supabase
+          .from('duyurular')
+          .update(formData)
+          .eq('id', editingDuyuru.id);
+
+        if (error) {
+          console.error('Error updating announcement:', error);
+          return;
+        }
+      } else {
+        // Yeni ekleme
+        const { error } = await supabase
+          .from('duyurular')
+          .insert(formData);
+
+        if (error) {
+          console.error('Error adding announcement:', error);
+          return;
+        }
+      }
+
+      setShowForm(false);
+      setEditingDuyuru(null);
+      setFormData({
+        baslik: '',
+        icerik: '',
+        yayin_tarihi: '',
+        son_tarih: '',
+        onem_derecesi: 'normal',
+        durum: 'aktif'
+      });
+      fetchDuyurular();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const openEditForm = (duyuru: Duyuru) => {
+    setEditingDuyuru(duyuru);
+    setFormData({
+      baslik: duyuru.baslik,
+      icerik: duyuru.icerik,
+      yayin_tarihi: duyuru.yayin_tarihi,
+      son_tarih: duyuru.son_tarih || '',
+      onem_derecesi: duyuru.onem_derecesi,
+      durum: duyuru.durum
+    });
+    setShowForm(true);
   };
 
   if (status === "loading" || !session || (session.user as UserWithRole)?.role !== "admin") {
@@ -174,7 +246,7 @@ export default function AdminDuyurularClient() {
                         {duyuru.durum === 'aktif' ? 'Pasif Yap' : 'Aktif Yap'}
                       </button>
                       <button 
-                        onClick={() => setEditingDuyuru(duyuru)}
+                        onClick={() => openEditForm(duyuru)}
                         className="text-blue-600 hover:text-blue-900"
                       >
                         Düzenle
@@ -203,41 +275,81 @@ export default function AdminDuyurularClient() {
       {/* Duyuru Ekleme/Düzenleme Formu */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+          <div className="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold mb-4">
               {editingDuyuru ? 'Duyuru Düzenle' : 'Yeni Duyuru Ekle'}
             </h3>
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Başlık</label>
-                <input 
-                  type="text" 
-                  className="w-full border rounded px-3 py-2"
-                  defaultValue={editingDuyuru?.baslik || ''}
-                />
+            <form onSubmit={handleFormSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Başlık *</label>
+                  <input 
+                    type="text" 
+                    name="baslik"
+                    value={formData.baslik}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Yayın Tarihi *</label>
+                  <input 
+                    type="date" 
+                    name="yayin_tarihi"
+                    value={formData.yayin_tarihi}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Son Tarih</label>
+                  <input 
+                    type="date" 
+                    name="son_tarih"
+                    value={formData.son_tarih}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Önem Derecesi</label>
+                  <select 
+                    name="onem_derecesi"
+                    value={formData.onem_derecesi}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value="dusuk">Düşük</option>
+                    <option value="normal">Normal</option>
+                    <option value="yuksek">Yüksek</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Durum</label>
+                  <select 
+                    name="durum"
+                    value={formData.durum}
+                    onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
+                  >
+                    <option value="aktif">Aktif</option>
+                    <option value="pasif">Pasif</option>
+                    <option value="arsiv">Arşiv</option>
+                  </select>
+                </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">İçerik</label>
+                <label className="block text-sm font-medium mb-1">İçerik *</label>
                 <textarea 
-                  className="w-full border rounded px-3 py-2 h-32"
-                  defaultValue={editingDuyuru?.icerik || ''}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Yayın Tarihi</label>
-                <input 
-                  type="date" 
+                  name="icerik"
+                  value={formData.icerik}
+                  onChange={handleInputChange}
+                  rows={8}
                   className="w-full border rounded px-3 py-2"
-                  defaultValue={editingDuyuru?.yayin_tarihi || ''}
+                  required
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Önem Derecesi</label>
-                <select className="w-full border rounded px-3 py-2">
-                  <option value="dusuk">Düşük</option>
-                  <option value="normal">Normal</option>
-                  <option value="yuksek">Yüksek</option>
-                </select>
               </div>
               <div className="flex gap-2 pt-4">
                 <button 
@@ -245,6 +357,14 @@ export default function AdminDuyurularClient() {
                   onClick={() => {
                     setShowForm(false);
                     setEditingDuyuru(null);
+                    setFormData({
+                      baslik: '',
+                      icerik: '',
+                      yayin_tarihi: '',
+                      son_tarih: '',
+                      onem_derecesi: 'normal',
+                      durum: 'aktif'
+                    });
                   }}
                   className="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                 >
