@@ -18,15 +18,17 @@ export default function AdminDashboardClient() {
       return;
     }
 
-    // Supabase client'ı sadece client-side'da oluştur
-    const { createClient } = require('@supabase/supabase-js');
-    const supabaseUrl = "https://lnrflmfmgccuxgtivumi.supabase.co";
-    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxucmZsbWZtZ2NjdXhndGl2dW1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjk5NzIsImV4cCI6MjA2NzgwNTk3Mn0.G3LWMFYAAv6lFWI9TEsyDGVYyJgnr2zZHHEnk-NMP0Q";
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 
     const fetchStats = async () => {
       setLoadingStats(true);
       try {
+        // Supabase client'ı sadece client-side'da oluştur
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabaseUrl = "https://lnrflmfmgccuxgtivumi.supabase.co";
+        const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxucmZsbWZtZ2NjdXhndGl2dW1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjk5NzIsImV4cCI6MjA2NzgwNTk3Mn0.G3LWMFYAAv6lFWI9TEsyDGVYyJgnr2zZHHEnk-NMP0Q";
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
         const { count: total } = await supabase
           .from("kurs_basvurulari")
           .select("*", { count: "exact", head: true });
@@ -52,7 +54,7 @@ export default function AdminDashboardClient() {
           courses: courses ?? 0,
           events: events ?? 0,
         });
-      } catch (error) {
+      } catch {
         setStats({ total: 0, today: 0, courses: 0, events: 0 });
       }
       setLoadingStats(false);

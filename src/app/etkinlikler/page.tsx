@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
+import Image from 'next/image';
 import type { Etkinlik } from '@/types/database';
 
 const supabaseUrl = "https://lnrflmfmgccuxgtivumi.supabase.co";
@@ -52,9 +53,11 @@ export default function EtkinliklerPage() {
             <div key={etkinlik.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {etkinlik.afis_url && (
                 <div className="h-48 bg-gray-200">
-                  <img 
+                  <Image 
                     src={etkinlik.afis_url} 
                     alt={etkinlik.baslik}
+                    width={400}
+                    height={192}
                     className="w-full h-full object-cover"
                   />
                 </div>

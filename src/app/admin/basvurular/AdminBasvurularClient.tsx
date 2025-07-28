@@ -80,7 +80,7 @@ export default function AdminBasvurularClient() {
         <div className="flex gap-2">
           <select 
             className="border rounded px-3 py-2"
-            onChange={(e) => {
+            onChange={() => {
               // Filtreleme işlemi burada yapılacak
             }}
           >

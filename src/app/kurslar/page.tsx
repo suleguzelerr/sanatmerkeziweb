@@ -45,7 +45,7 @@ export default function KurslarPage() {
   };
 
   // Kursları kategorilere göre grupla
-  const kursGruplari = kurslar.reduce((groups: any, kurs) => {
+  const kursGruplari = kurslar.reduce((groups: Record<string, Array<{value: string, label: string, kurs: typeof kurslar[0]}>>, kurs) => {
     const kategori = kurs.kategori;
     if (!groups[kategori]) {
       groups[kategori] = [];
@@ -120,10 +120,10 @@ export default function KurslarPage() {
               <div>
                 <label className="block text-sm font-medium mb-1">Kurs Seçimi*</label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {Object.entries(kursGruplari).map(([kategori, secenekler]: [string, any]) => (
+                  {Object.entries(kursGruplari).map(([kategori, secenekler]: [string, Array<{value: string, label: string, kurs: typeof kurslar[0]}>]) => (
                     <div key={kategori}>
                       <div className={`font-semibold text-xs mb-1 px-2 py-1 rounded bg-red-100 text-red-800 border-red-500`}>{kategori}</div>
-                      {secenekler.map((sec: any) => (
+                      {secenekler.map((sec: {value: string, label: string, kurs: typeof kurslar[0]}) => (
                         <label key={sec.value} className="flex items-center gap-2 text-sm mb-1">
                           <input
                             type="radio"
@@ -187,11 +187,11 @@ export default function KurslarPage() {
         <div className="text-center py-8">Kurslar yükleniyor...</div>
       ) : (
         <div className="space-y-10 mb-12">
-          {Object.entries(kursGruplari).map(([kategori, secenekler]: [string, any]) => (
+          {Object.entries(kursGruplari).map(([kategori, secenekler]: [string, Array<{value: string, label: string, kurs: typeof kurslar[0]}>]) => (
             <div key={kategori}>
               <h2 className="text-xl font-bold mb-4 px-4 py-2 rounded shadow inline-block border-l-8 bg-red-100 text-red-800 border-red-500">{kategori}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {secenekler.map((kurs: any) => (
+                {secenekler.map((kurs: {value: string, label: string, kurs: typeof kurslar[0]}) => (
                   <div key={kurs.value} className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center border-2 border-gray-100 hover:border-red-400 transition">
                     <div className="flex flex-col items-center">
                       <span className="text-3xl mb-2">🎓</span>

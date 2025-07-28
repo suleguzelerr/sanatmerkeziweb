@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import type { Session } from "next-auth";
 import { createClient } from '@supabase/supabase-js';
 import type { GaleriAlbumu, GaleriMedya } from '@/types/database';
@@ -132,25 +133,7 @@ export default function AdminGaleriClient() {
     }
   };
 
-  const toggleAlbumDurum = async (id: number, currentDurum: string) => {
-    const yeniDurum = currentDurum === 'aktif' ? 'pasif' : 'aktif';
-    
-    try {
-      const { error } = await supabase
-        .from('galeri_albumleri')
-        .update({ durum: yeniDurum })
-        .eq('id', id);
 
-      if (error) {
-        console.error('Error updating status:', error);
-        return;
-      }
-
-      fetchAlbumler();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   if (status === "loading" || !session || (session.user as UserWithRole)?.role !== "admin") {
     return <div>Yükleniyor...</div>;
@@ -259,9 +242,11 @@ export default function AdminGaleriClient() {
                   <div key={medya.id} className="relative group">
                     <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                       {medya.dosya_tipi === 'image' ? (
-                        <img 
+                        <Image 
                           src={medya.dosya_url} 
                           alt={medya.baslik || 'Galeri görseli'}
+                          width={300}
+                          height={300}
                           className="w-full h-full object-cover"
                         />
                       ) : (
