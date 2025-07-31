@@ -1,12 +1,7 @@
 "use client";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { Session } from "next-auth";
 import { createClient } from '@supabase/supabase-js';
 import type { KursBasvurusu } from '@/types/database';
-
-type UserWithRole = Session["user"] & { role?: string };
 
 const supabaseUrl = "https://lnrflmfmgccuxgtivumi.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxucmZsbWZtZ2NjdXhndGl2dW1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjk5NzIsImV4cCI6MjA2NzgwNTk3Mn0.G3LWMFYAAv6lFWI9TEsyDGVYyJgnr2zZHHEnk-NMP0Q";
@@ -14,20 +9,12 @@ const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function AdminBasvurularClient() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
   const [basvurular, setBasvurular] = useState<KursBasvurusu[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "loading") return;
-    if (!session || (session.user as UserWithRole)?.role !== "admin") {
-      router.replace("/admin/login");
-      return;
-    }
-    
     fetchBasvurular();
-  }, [session, status, router]);
+  }, []);
 
   const fetchBasvurular = async () => {
     setLoading(true);
@@ -69,9 +56,7 @@ export default function AdminBasvurularClient() {
     }
   };
 
-  if (status === "loading" || !session || (session.user as UserWithRole)?.role !== "admin") {
-    return <div>Yükleniyor...</div>;
-  }
+
 
   return (
     <div className="p-8">

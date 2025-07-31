@@ -73,31 +73,7 @@ CREATE TABLE IF NOT EXISTS duyurular (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 5. Galeri Albümleri Tablosu
-CREATE TABLE IF NOT EXISTS galeri_albumleri (
-    id SERIAL PRIMARY KEY,
-    baslik VARCHAR(200) NOT NULL,
-    aciklama TEXT,
-    kapak_fotografi_url TEXT,
-    gorunum_tipi VARCHAR(20) DEFAULT 'grid', -- 'grid', 'slider', 'masonry'
-    durum VARCHAR(20) DEFAULT 'aktif', -- 'aktif', 'pasif'
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- 6. Galeri Medyaları Tablosu
-CREATE TABLE IF NOT EXISTS galeri_medyalar (
-    id SERIAL PRIMARY KEY,
-    album_id INTEGER REFERENCES galeri_albumleri(id) ON DELETE CASCADE,
-    dosya_url TEXT NOT NULL,
-    dosya_tipi VARCHAR(20) NOT NULL, -- 'image', 'video'
-    baslik VARCHAR(200),
-    aciklama TEXT,
-    sira_no INTEGER DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- 7. Mesajlar Tablosu
+-- 5. Mesajlar Tablosu
 CREATE TABLE IF NOT EXISTS mesajlar (
     id SERIAL PRIMARY KEY,
     adsoyad VARCHAR(100) NOT NULL,
@@ -111,7 +87,7 @@ CREATE TABLE IF NOT EXISTS mesajlar (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 8. Sayfa İçerikleri Tablosu
+-- 6. Sayfa İçerikleri Tablosu
 CREATE TABLE IF NOT EXISTS sayfa_icerikleri (
     id SERIAL PRIMARY KEY,
     sayfa_adi VARCHAR(50) UNIQUE NOT NULL, -- 'hakkimizda', 'iletisim', 'footer'
@@ -128,7 +104,7 @@ CREATE TABLE IF NOT EXISTS sayfa_icerikleri (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 9. Kullanıcılar Tablosu (Admin kullanıcıları için)
+-- 7. Kullanıcılar Tablosu (Admin kullanıcıları için)
 CREATE TABLE IF NOT EXISTS kullanicilar (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -174,8 +150,6 @@ ALTER TABLE kurs_basvurulari ENABLE ROW LEVEL SECURITY;
 ALTER TABLE kurslar ENABLE ROW LEVEL SECURITY;
 ALTER TABLE etkinlikler ENABLE ROW LEVEL SECURITY;
 ALTER TABLE duyurular ENABLE ROW LEVEL SECURITY;
-ALTER TABLE galeri_albumleri ENABLE ROW LEVEL SECURITY;
-ALTER TABLE galeri_medyalar ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mesajlar ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sayfa_icerikleri ENABLE ROW LEVEL SECURITY;
 ALTER TABLE kullanicilar ENABLE ROW LEVEL SECURITY;
@@ -184,8 +158,6 @@ ALTER TABLE kullanicilar ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Kurslar herkese açık" ON kurslar FOR SELECT USING (true);
 CREATE POLICY "Etkinlikler herkese açık" ON etkinlikler FOR SELECT USING (true);
 CREATE POLICY "Duyurular herkese açık" ON duyurular FOR SELECT USING (true);
-CREATE POLICY "Galeri herkese açık" ON galeri_albumleri FOR SELECT USING (true);
-CREATE POLICY "Galeri medyaları herkese açık" ON galeri_medyalar FOR SELECT USING (true);
 CREATE POLICY "Sayfa içerikleri herkese açık" ON sayfa_icerikleri FOR SELECT USING (true);
 
 -- Admin yazma politikaları (sadece admin yazabilir)
@@ -193,8 +165,6 @@ CREATE POLICY "Admin kurs başvuruları yönetimi" ON kurs_basvurulari FOR ALL U
 CREATE POLICY "Admin kurslar yönetimi" ON kurslar FOR ALL USING (true);
 CREATE POLICY "Admin etkinlikler yönetimi" ON etkinlikler FOR ALL USING (true);
 CREATE POLICY "Admin duyurular yönetimi" ON duyurular FOR ALL USING (true);
-CREATE POLICY "Admin galeri yönetimi" ON galeri_albumleri FOR ALL USING (true);
-CREATE POLICY "Admin galeri medyaları yönetimi" ON galeri_medyalar FOR ALL USING (true);
 CREATE POLICY "Admin mesajlar yönetimi" ON mesajlar FOR ALL USING (true);
 CREATE POLICY "Admin sayfa içerikleri yönetimi" ON sayfa_icerikleri FOR ALL USING (true);
 CREATE POLICY "Admin kullanıcılar yönetimi" ON kullanicilar FOR ALL USING (true);

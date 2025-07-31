@@ -1,25 +1,13 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { Session } from "next-auth";
-type UserWithRole = Session["user"] & { role?: string };
 
 export default function AdminDashboardClient() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [stats, setStats] = useState({ total: 0, today: 0, courses: 0, events: 0 });
   const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
-    if (status === "loading") return;
-    if (!session || (session.user as UserWithRole)?.role !== "admin") {
-      router.replace("/admin/login");
-      return;
-    }
-
-
-
     const fetchStats = async () => {
       setLoadingStats(true);
       try {
@@ -61,11 +49,7 @@ export default function AdminDashboardClient() {
     };
 
     fetchStats();
-  }, [session, status, router]);
-
-  if (status === "loading" || !session || (session.user as UserWithRole)?.role !== "admin") {
-    return <div>Yükleniyor...</div>;
-  }
+  }, []);
 
   return (
     <div className="p-8">
@@ -91,13 +75,22 @@ export default function AdminDashboardClient() {
       <div className="bg-white rounded-xl shadow p-6">
         <h3 className="text-xl font-semibold mb-4">Hızlı İşlemler</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+          <button 
+            onClick={() => router.push('/admin/basvurular')}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+          >
             Yeni Başvuru Görüntüle
           </button>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+          <button 
+            onClick={() => router.push('/admin/kurslar')}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
             Kurs Ekle
           </button>
-          <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+          <button 
+            onClick={() => router.push('/admin/etkinlikler')}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
             Etkinlik Ekle
           </button>
         </div>

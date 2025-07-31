@@ -68,28 +68,6 @@ export interface Duyuru {
   updated_at: string;
 }
 
-export interface GaleriAlbumu {
-  id: number;
-  baslik: string;
-  aciklama?: string;
-  kapak_fotografi_url?: string;
-  gorunum_tipi: 'grid' | 'slider' | 'masonry';
-  durum: 'aktif' | 'pasif';
-  created_at: string;
-  updated_at: string;
-}
-
-export interface GaleriMedya {
-  id: number;
-  album_id: number;
-  dosya_url: string;
-  dosya_tipi: 'image' | 'video';
-  baslik?: string;
-  aciklama?: string;
-  sira_no: number;
-  created_at: string;
-}
-
 export interface Mesaj {
   id: number;
   adsoyad: string;
@@ -98,7 +76,6 @@ export interface Mesaj {
   konu?: string;
   mesaj: string;
   okundu: boolean;
-  yanitlandi: boolean;
   yanit_metni?: string;
   yanit_tarihi?: string;
   created_at: string;
@@ -132,7 +109,7 @@ export interface Kullanici {
   updated_at: string;
 }
 
-// API yanıt tipleri
+// API Response tipleri
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
