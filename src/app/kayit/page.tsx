@@ -33,11 +33,142 @@ export default function KayitPage() {
   const [seciliKurs, setSeciliKurs] = useState("");
   const [evrakTipi, setEvrakTipi] = useState("online");
   const [sozlesmeOnay, setSozlesmeOnay] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    const formData = new FormData(e.currentTarget);
+    
+    // Dosya yükleme işlemi
+    let kimlikDosyaUrl = null;
+    let ogrenimDosyaUrl = null;
+    let digerDosyaUrl = null;
+
+    if (evrakTipi === "online") {
+      try {
+        // Kimlik dosyası yükleme
+        const kimlikDosya = formData.get('kimlik') as File;
+        if (kimlikDosya && kimlikDosya.size > 0) {
+          const kimlikFormData = new FormData();
+          kimlikFormData.append('file', kimlikDosya);
+          kimlikFormData.append('folder', 'kimlik');
+          
+          const kimlikResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: kimlikFormData,
+          });
+          
+          if (kimlikResponse.ok) {
+            const kimlikResult = await kimlikResponse.json();
+            kimlikDosyaUrl = kimlikResult.url;
+          }
+        }
+
+        // Öğrenim belgesi yükleme
+        const ogrenimDosya = formData.get('ogrenimBelgesi') as File;
+        if (ogrenimDosya && ogrenimDosya.size > 0) {
+          const ogrenimFormData = new FormData();
+          ogrenimFormData.append('file', ogrenimDosya);
+          ogrenimFormData.append('folder', 'ogrenim');
+          
+          const ogrenimResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: ogrenimFormData,
+          });
+          
+          if (ogrenimResponse.ok) {
+            const ogrenimResult = await ogrenimResponse.json();
+            ogrenimDosyaUrl = ogrenimResult.url;
+          }
+        }
+
+        // Diğer dosya yükleme (opsiyonel)
+        const digerDosya = formData.get('diger') as File;
+        if (digerDosya && digerDosya.size > 0) {
+          const digerFormData = new FormData();
+          digerFormData.append('file', digerDosya);
+          digerFormData.append('folder', 'diger');
+          
+          const digerResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: digerFormData,
+          });
+          
+          if (digerResponse.ok) {
+            const digerResult = await digerResponse.json();
+            digerDosyaUrl = digerResult.url;
+          }
+        }
+      } catch (error) {
+        console.error('Dosya yükleme hatası:', error);
+        setMessage('Dosya yükleme sırasında hata oluştu.');
+        setLoading(false);
+        return;
+      }
+    }
+
+    const data = {
+      adsoyad: formData.get('adsoyad') as string,
+      tc: formData.get('tc') as string,
+      babaAnne: formData.get('babaAnne') as string,
+      dogumYeri: formData.get('dogumYeri') as string,
+      dogumTarihi: formData.get('dogumTarihi') as string,
+      ogrenim: formData.get('ogrenim') as string,
+      adres: formData.get('adres') as string,
+      telCep: formData.get('telCep') as string,
+      telEv: formData.get('telEv') as string,
+      telIs: formData.get('telIs') as string,
+      kurs: seciliKurs,
+      evrakTipi: evrakTipi,
+      kimlikDosyaUrl,
+      ogrenimDosyaUrl,
+      digerDosyaUrl,
+    };
+
+    try {
+      const response = await fetch('/api/kurslar/basvuru', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setMessage('Başvurunuz başarıyla alındı!');
+        e.currentTarget.reset();
+        setSeciliKurs("");
+        setEvrakTipi("online");
+        setSozlesmeOnay(false);
+      } else {
+        setMessage(result.error || 'Bir hata oluştu.');
+      }
+    } catch {
+      setMessage('Bir hata oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="max-w-2xl mx-auto px-4 py-12">
       <h1 className="text-2xl md:text-4xl font-bold mb-6 text-red-700 text-center">Kurs Başvuru ve Kayıt Sözleşmesi</h1>
-      <form className="bg-white rounded-2xl shadow-2xl p-8 space-y-4 border-2 border-red-100">
+      {message && (
+        <div className={`mb-4 p-4 rounded-lg text-center ${
+          message.includes('başarıyla') 
+            ? 'bg-green-100 text-green-800 border border-green-300' 
+            : 'bg-red-100 text-red-800 border border-red-300'
+        }`}>
+          {message}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl p-8 space-y-4 border-2 border-red-100">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium">Adı Soyadı*</label>
@@ -136,7 +267,17 @@ export default function KayitPage() {
           <input type="checkbox" required checked={sozlesmeOnay} onChange={e => setSozlesmeOnay(e.target.checked)} />
           <span className="text-sm">Yukarıdaki sözleşme metnini okudum, kabul ediyorum.</span>
         </div>
-        <button type="submit" className="w-full bg-gradient-to-r from-red-600 to-orange-400 text-white py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 hover:from-red-700 hover:to-orange-500 transition">Başvuruyu Gönder</button>
+        <button 
+          type="submit" 
+          disabled={loading || !sozlesmeOnay}
+          className={`w-full py-3 rounded-full font-bold text-lg shadow-lg transition ${
+            loading || !sozlesmeOnay
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-red-600 to-orange-400 text-white hover:scale-105 hover:from-red-700 hover:to-orange-500'
+          }`}
+        >
+          {loading ? 'Gönderiliyor...' : 'Başvuruyu Gönder'}
+        </button>
       </form>
     </section>
   );

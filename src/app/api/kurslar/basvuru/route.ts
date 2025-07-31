@@ -9,8 +9,24 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    // Beklenen alanlar: adsoyad, tc, babaAnne, dogumYeri, dogumTarihi, ogrenim, adres, telCep, telEv, telIs, kurs, evrakTipi
-    const { adsoyad, tc, babaAnne, dogumYeri, dogumTarihi, ogrenim, adres, telCep, telEv, telIs, kurs, evrakTipi } = data;
+    // Beklenen alanlar: adsoyad, tc, babaAnne, dogumYeri, dogumTarihi, ogrenim, adres, telCep, telEv, telIs, kurs, evrakTipi, kimlikDosyaUrl, ogrenimDosyaUrl, digerDosyaUrl
+    const { 
+      adsoyad, 
+      tc, 
+      babaAnne, 
+      dogumYeri, 
+      dogumTarihi, 
+      ogrenim, 
+      adres, 
+      telCep, 
+      telEv, 
+      telIs, 
+      kurs, 
+      evrakTipi,
+      kimlikDosyaUrl,
+      ogrenimDosyaUrl,
+      digerDosyaUrl
+    } = data;
 
     // Basit validasyon
     if (!adsoyad || !tc || !babaAnne || !dogumYeri || !dogumTarihi || !ogrenim || !adres || !telCep || !kurs || !evrakTipi) {
@@ -50,6 +66,9 @@ export async function POST(req: NextRequest) {
           tel_is: telIs,
           kurs,
           evrak_tipi: evrakTipi,
+          kimlik_dosya_url: kimlikDosyaUrl,
+          ogrenim_dosya_url: ogrenimDosyaUrl,
+          diger_dosya_url: digerDosyaUrl,
           durum: 'beklemede',
         },
       ])

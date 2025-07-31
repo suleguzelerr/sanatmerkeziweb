@@ -56,7 +56,6 @@ export default function Navbar() {
               <Link href="/admin/kurslar" className="text-gray-800 hover:text-red-600 font-medium transition" onClick={() => setSidebarOpen(false)}>Kurslar</Link>
               <Link href="/admin/duyurular" className="text-gray-800 hover:text-red-600 font-medium transition" onClick={() => setSidebarOpen(false)}>Duyurular</Link>
               <Link href="/admin/kullanicilar" className="text-gray-800 hover:text-red-600 font-medium transition" onClick={() => setSidebarOpen(false)}>Kullanıcılar</Link>
-              <Link href="/admin/galeri" className="text-gray-800 hover:text-red-600 font-medium transition" onClick={() => setSidebarOpen(false)}>Galeri</Link>
               <Link href="/admin/icerikler" className="text-gray-800 hover:text-red-600 font-medium transition" onClick={() => setSidebarOpen(false)}>İçerikler</Link>
               <Link href="/admin/mesajlar" className="text-gray-800 hover:text-red-600 font-medium transition" onClick={() => setSidebarOpen(false)}>Mesajlar</Link>
               <Link href="/admin/ayarlar" className="text-gray-800 hover:text-red-600 font-medium transition" onClick={() => setSidebarOpen(false)}>Ayarlar</Link>

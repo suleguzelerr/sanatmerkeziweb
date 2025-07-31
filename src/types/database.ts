@@ -76,6 +76,7 @@ export interface Mesaj {
   konu?: string;
   mesaj: string;
   okundu: boolean;
+  yanitlandi: boolean;
   yanit_metni?: string;
   yanit_tarihi?: string;
   created_at: string;

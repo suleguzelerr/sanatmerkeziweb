@@ -33,7 +33,6 @@ export default function AdminPanelClient() {
           <Link href="/admin/kurslar" className="text-gray-800 hover:text-red-600 font-medium transition">Kurslar</Link>
           <Link href="/admin/duyurular" className="text-gray-800 hover:text-red-600 font-medium transition">Duyurular</Link>
           <Link href="/admin/kullanicilar" className="text-gray-800 hover:text-red-600 font-medium transition">Kullanıcılar</Link>
-          <Link href="/admin/galeri" className="text-gray-800 hover:text-red-600 font-medium transition">Galeri</Link>
           <Link href="/admin/icerikler" className="text-gray-800 hover:text-red-600 font-medium transition">İçerikler</Link>
           <Link href="/admin/mesajlar" className="text-gray-800 hover:text-red-600 font-medium transition">Mesajlar</Link>
           <Link href="/admin/ayarlar" className="text-gray-800 hover:text-red-600 font-medium transition">Ayarlar</Link>

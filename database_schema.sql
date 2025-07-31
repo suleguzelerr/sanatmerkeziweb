@@ -175,4 +175,13 @@ CREATE POLICY "Mesajlar okunabilir" ON mesajlar FOR SELECT USING (true);
 
 -- Kurs başvuruları için herkes yazabilir
 CREATE POLICY "Herkes kurs başvurusu yapabilir" ON kurs_basvurulari FOR INSERT WITH CHECK (true);
-CREATE POLICY "Kurs başvuruları okunabilir" ON kurs_basvurulari FOR SELECT USING (true); 
+CREATE POLICY "Kurs başvuruları okunabilir" ON kurs_basvurulari FOR SELECT USING (true);
+
+-- Supabase Storage Bucket oluşturma (Manuel olarak Supabase Dashboard'dan yapılmalı)
+-- Storage > New Bucket > "basvuru-dosyalari" adında bucket oluştur
+-- Public bucket olarak ayarla
+-- RLS politikaları:
+-- INSERT: Herkes dosya yükleyebilir
+-- SELECT: Herkes dosya okuyabilir
+-- UPDATE: Sadece admin
+-- DELETE: Sadece admin 
